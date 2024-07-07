@@ -1,10 +1,7 @@
-from .database import Base
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-
-
-
+from database import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -17,6 +14,7 @@ class User(Base):
     wallet_balance = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     selected_books = relationship("SelectedBooks", back_populates="user")
+    reviews = relationship("Reviews", back_populates="user") 
 
 class SelectedBooks(Base):
     __tablename__ = "selected_books"
@@ -26,12 +24,13 @@ class SelectedBooks(Base):
     name = Column(String, nullable=False)
     genre = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
+    author = Column(String, nullable=False)
     time_added = Column(DateTime, default=datetime.utcnow)
+    quantity = Column(Integer, default=1)
+    total_price = Column(Integer, default=0)
     user = relationship("User", back_populates="selected_books")
+    reviews = relationship("Reviews", back_populates="book")  
 
-
-
-# Giving book reviews
 class Reviews(Base):
     __tablename__ = "reviews"
 
